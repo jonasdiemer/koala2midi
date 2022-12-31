@@ -2,43 +2,9 @@ use midi_file::core::{Channel, Clocks, DurationName, NoteNumber, Velocity};
 use midi_file::file::{QuartersPerMinute, Track};
 use midi_file::MidiFile;
 
-use serde::{Deserialize, Serialize};
-use serde_with;
 use std::fs;
 
-#[derive(Serialize, Deserialize, Debug)]
-#[serde(rename_all = "camelCase")]
-struct Note{
-    chance: f32,
-    length: u32, //16384 seems to be 1 bar in 4/4, ie. 1024 for quarter 
-    num: u32,
-    pan: f32,
-    pitch: f32,
-    start: f32,
-    time_offset: u32,
-    vel: f32
-}
-#[serde_with::serde_as]
-#[derive(Serialize, Deserialize, Debug)]
-struct Pattern {
-    #[serde_as(as = "serde_with::DefaultOnError")]
-    notes: Vec<Note>
-}
-#[derive(Serialize, Deserialize, Debug)]
-struct Sequence {
-    pattern: Pattern
-}
-#[derive(Serialize, Deserialize, Debug)]
-#[serde(rename_all = "camelCase")]
-struct SequenceFile{
-    beats_per_bar: u32,
-    bpm: f32,
-    curr_sequence_id: u32,
-    quantize_division: u32,
-    quantizing: bool,
-    sequences: Vec<Sequence>,
-    swing: f32
-}
+use koala2midi::koala;
 
 #[derive(Debug)]
 struct MidiMessage{
@@ -50,7 +16,7 @@ struct MidiMessage{
 }
 
 
-fn note_to_midi_messages(note: Note) -> Vec<MidiMessage> {
+fn note_to_midi_messages(note: koala::Note) -> Vec<MidiMessage> {
     // calculate MIDI note number from pitch, assuming 0 is C1 = 24
     let note_number= NoteNumber::new((24+note.pitch as i8) as u8);
     let channel = Channel::new(note.num as u8);
@@ -74,7 +40,7 @@ fn note_to_midi_messages(note: Note) -> Vec<MidiMessage> {
 }
 
 /// Returns a vector of midi events
-fn koala_sequence_to_midi(sf: SequenceFile) {
+fn koala_sequence_to_midi(sf: koala::SequenceFile) {
     let mut mfile = MidiFile::new();
 
     // convert sequences to tracks
@@ -146,7 +112,7 @@ fn main() {
     let data = fs::read_to_string("./sequence.json")
         .expect("Unable to read file");
 
-    let seq_file: SequenceFile = serde_json::from_str(&data)
+    let seq_file: koala::SequenceFile = serde_json::from_str(&data)
         .expect("JSON does not have correct format.");
     
 
