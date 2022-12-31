@@ -11,5 +11,5 @@ fn main() {
         .expect("JSON does not have correct format.");
     
 
-    midi_export::koala_sequence_to_midi(seq_file);
+    midi_export::koala_sequence_to_midi(seq_file, "test.mid");
 }

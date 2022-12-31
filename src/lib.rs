@@ -41,6 +41,8 @@ pub mod midi_export {
     use midi_file::file::{QuartersPerMinute, Track};
     use midi_file::MidiFile;
 
+    use std::path::Path;
+
     use crate::koala;
 
     #[derive(Debug)]
@@ -76,7 +78,8 @@ pub mod midi_export {
     }
 
     /// Returns a vector of midi events
-    pub fn koala_sequence_to_midi(sf: koala::SequenceFile) {
+    pub fn koala_sequence_to_midi<P: AsRef<Path>>(sf: koala::SequenceFile,
+                                  mid_file_path: P) {
         let mut mfile = MidiFile::new();
 
         // convert sequences to tracks
@@ -142,6 +145,6 @@ pub mod midi_export {
             mfile.push_track(track).unwrap();
         }
 
-        mfile.save("test.mid").unwrap();
+        mfile.save(mid_file_path).unwrap();
     }
 }
