@@ -96,8 +96,7 @@ pub mod midi_export {
                 .pattern
                 .notes
                 .into_iter()
-                .map(|n| note_to_midi_messages(n))
-                .flatten()
+                .flat_map(note_to_midi_messages)
                 .collect();
 
             messages.sort_by(|a, b| a.abs_time.cmp(&b.abs_time));

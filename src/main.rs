@@ -2,7 +2,7 @@ use std::fs;
 use std::path::PathBuf;
 use std::io::Read;
 use clap::Parser;
-use zip;
+
 
 use koala2midi::{koala, midi_export};
 
