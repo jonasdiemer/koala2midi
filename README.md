@@ -4,8 +4,23 @@ Convert [Koala](https://www.koalasampler.com) songs to MIDI, e.g. for further pr
 
 Currently in "toy" stage.
 
-What works:
+## What works:
 
-- Convert a single sequence.json (to be manually extracted from .koala zip file) into a midi file
+- Convert a .koala file into a midi file
+  - Alternatively, a sequence.json (to be manually extracted from .koala zip file) can be supplied
+- All (non-empty) sequences are converted into individual tracks
 
 So, not much ;)
+
+## Usage
+
+```
+Usage: koala2midi <INPUT_FILE>
+
+Arguments:
+  <INPUT_FILE>  Name of the person to greet
+
+Options:
+  -h, --help     Print help information
+  -V, --version  Print version information
+```
